@@ -87,7 +87,8 @@ function getDifferentRows(table1, table2) {
 
     const rows = [];
 
-    for (var y = 0; y < table1.length; y++) {
+    let y = 0;
+    while (y < table1.length && y < table2.length) {
         const diffObj = [];
         const row1 = table1[y];
         const row2 = table1[y];
@@ -97,7 +98,8 @@ function getDifferentRows(table1, table2) {
             break;
         }
 
-        for (var x = 0; x < row1.length; x++) {
+        let x = 0;
+        while (x < row1.length && x < row2.length) {
             const column1 = row1[x];
             const column2 = row2[x];
 
@@ -106,11 +108,39 @@ function getDifferentRows(table1, table2) {
                 diffObj.push(column1);
                 diffObj.push(column2);
             }
+
+            x++;
+        }
+
+        while (x < row1.length) {
+            const column = row1[x];
+            diffObj.push(column);
+            x++;
+        }
+
+        while (x < row2.length) {
+            const column = row2[x];
+            diffObj.push(column);
+            x++;
         }
 
         if (diffObj.length !== 0) {
             rows.push(diffObj);
         }
+
+        y++;
+    }
+
+    while (y < table1.length) {
+        const row = table1[y];
+        rows.push(row);
+        y++;
+    }
+
+    while (y < table2.length) {
+        const row = table2[y];
+        rows.push(row);
+        y++;
     }
 
     return rows;
