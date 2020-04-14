@@ -44,6 +44,9 @@ try {
         case "rows":
             $rows = Driver::getInstance()->getTableRows($_REQUEST['baseName'], $_REQUEST['tableName']);
             break;
+        case "rows-api":
+            echo json_encode(Driver::getInstance()->getTableRows($_REQUEST['db'], $_REQUEST['table']));
+            exit();
     }
 
 

@@ -13,7 +13,7 @@
 <body>
 <div class="modal-background" onclick="Data.hideTableData(); return false;">
     <div class="modal">
-        <iframe src="" frameborder="0"></iframe>
+        <div id="asdasdasd"></div>
     </div>
 </div>
 
@@ -64,6 +64,7 @@
                 <span><?php $spath = explode("@", SECOND_DSN);
                     echo end($spath); ?></span>
             </td>
+            <td></td>
         </tr>
     <?php foreach ($tables as $tableName => $data) { ?>
         <tr class="data">
@@ -97,6 +98,9 @@
                     href="#" class="sample-data">Sample data (<?php echo SAMPLE_DATA_LENGTH; ?> rows)</a><?php } ?>
             </td>
             <?php } ?>
+            <td>
+                <span class="diff-table-rows" data-table-name="<?php echo $tableName; ?>">Diff table rows</span>
+            </td>
         </tr>
     <?php } ?>
     </table>

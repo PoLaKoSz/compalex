@@ -21,6 +21,10 @@ td.type-procedures ul, td.type-functions ul {
     margin-left: -20px;
 }
 
+td.diff-table-rows {
+
+}
+
 .data h3 {
     margin-bottom: 2px;
 }
