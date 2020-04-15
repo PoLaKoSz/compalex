@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>COMPALEX - database schema compare tool</title>
+    <title>COMPALEX - database schema and table rows compare tool</title>
     <script src="public/js/jquery.min.js"></script>
     <script src="public/js/functional.js"></script>
     <style type="text/css" media="all">
@@ -20,7 +20,7 @@
 <div class="compare-database-block">
     <h1>Compalex</h1>
 
-    <h3>Database schema compare tool</h3>
+    <h3>Database schema and table rows compare tool</h3>
     <table class="table">
         <tr class="panel">
             <td>
