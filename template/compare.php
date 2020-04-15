@@ -3,17 +3,34 @@
 <head>
     <meta charset="utf-8">
     <title>COMPALEX - database schema and table rows compare tool</title>
-    <script src="public/js/jquery.min.js"></script>
-    <script src="public/js/functional.js"></script>
-    <style type="text/css" media="all">
-        @import url("public/css/style.css");
-    </style>
+    <link rel="stylesheet" href="public/css/bootstrap.4.4.1.min.css">
+    <link rel="stylesheet" href="public/css/style.css">
+    <script src="public/js/jquery-3.4.1.slim.min.js" defer></script>
+    <script src="public/js/bootstrap.4.4.1.min.js" defer></script>
+    <script src="public/js/functional.js" defer></script>
 </head>
 
 <body>
 <div class="modal-background" onclick="Data.hideTableData(); return false;">
-    <div class="modal">
+    <div class="modallll">
         <div id="asdasdasd"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -99,7 +116,9 @@
             </td>
             <?php } ?>
             <td>
-                <span class="diff-table-rows" data-table-name="<?php echo $tableName; ?>">Diff table rows</span>
+                <button type="button" class="btn btn-primary diff-table-rows" data-table-name="<?php echo $tableName; ?>" data-toggle="modal" data-target="#exampleModal">
+                    Diff table rows
+                </button>
             </td>
         </tr>
     <?php } ?>
