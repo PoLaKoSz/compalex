@@ -167,7 +167,7 @@ function getDifferentRows(table1, table2) {
         y++;
     }
 
-    console.log(rows)
+    //console.log(rows)
 
     return rows;
 }
@@ -196,7 +196,10 @@ $(document).ready(function() {
             $('div.modal-background').addClass('visible');
 
             const headers = getHeaders(db1Table, db2Table);
+            //console.log("getDifferentRows", db1Table, db2Table)
             const differentRows = getDifferentRows(db1Table, db2Table);
+
+            console.log(differentRows)
 
             let html = "<table class='response'><tr>";
             html += getHeaderTemplate(getHeaders(db1Table));
@@ -206,48 +209,57 @@ $(document).ready(function() {
             const table1ColumnCount = getHeaderCount(db1Table);
             const table2ColumnCount = getHeaderCount(db2Table);
 
-            let y = 0;
-            while (x < table1ColumnCount && x < table2ColumnCount) {
-                const table1column = table1row[x];
-                const table2column = table2row[x];
-                
+            let y = 1;
+            while (y < db1Table.length && y < db2Table.length) {
+                console.log("parse", db1Table[y], db2Table[y])
+                if (Object.keys(differentRows[y]).length === 0) {
+                    console.log(`#${row} has no difference ... skipping`)
+                    y++;
+                    continue;
+                }
 
-    
-                x++;
-            }
-            
-            differentRows.forEach(row => {
                 html += "<tr>";
                 let table1Columns = "";
                 let table2Columns = "";
 
                 let x = 0;
                 while (x < table1ColumnCount && x < table2ColumnCount) {
-                    const table1column = table1row[x];
-                    const table2column = table2row[x];
-                    
+                    table1Columns += `<td>${db1Table[y][x]}</td>`;
+                    table2Columns += `<td>${db2Table[y][x]}</td>`;
+                    x++;
+                }
+        
+                while (x < table1ColumnCount) {
+                    table1Columns += `<td>${db1Table[y][x]}</td>`;
+                    x++;
+                }
+        
+                while (x < table2ColumnCount) {
+                    table2Columns += `<td>${db2Table[y][x]}</td>`;
+                    x++;
+                }
 
-        
-                    x++;
-                }
-        
-                while (x < table1row.length) {
-                    columnDiffObject[x] = [ table1row[x], null ];
-                    //console.log(`#1 table has one more column at #${x}`)
-                    //console.log("x =", x)
-                    x++;
-                }
-        
-                while (x < table2row.length) {
-                    columnDiffObject[x] = [ null, table2row[x] ];
-                    //console.log(`#2 table has one more column at #${x}`)
-                    //console.log("x =", x)
-                    x++;
-                }
                 html += table1Columns;
                 html += table2Columns;
                 html += "</tr>";
-            });
+                y++;
+            }
+
+            while (y < db1Table.length) {
+                db1Table[y].forEach(column => {
+                    html += `<td>${column}</td>`;
+                });
+                html += `<td colspan="${table2ColumnCount}"></td>`;
+                y++;
+            }
+
+            while (y < db2Table.length) {
+                html += `<td colspan="${table1ColumnCount}"></td>`;
+                db2Table[y].forEach(column => {
+                    html += `<td>${column}</td>`;
+                });
+                y++;
+            }
             
             html += "</table>";
 
