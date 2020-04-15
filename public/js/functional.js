@@ -37,8 +37,8 @@ function getHeaders(table1, table2) {
     const tableHeader = [table1[0], table2[0]];
 
     if (tableHeader[0].length != tableHeader[1].length) {
-        alert("not enought table header!");
-        return;
+        //alert("not enought table header!");
+        //return;
     }
 
     const headers = [];
@@ -52,7 +52,13 @@ function getHeaders(table1, table2) {
         }
     }
 
+    console.log(headers)
+
     return headers;
+}
+
+function getHeaders(table) {
+    return table[0];
 }
 
 function getRows(table1, table2) {
@@ -77,73 +83,101 @@ function getRows(table1, table2) {
     return rows;
 }
 
+function hasEqualCountHeaders(table1, table2) {
+    return table1[0].length != table2[1].length;
+}
+
+function getHeaderCount(table) {
+    return getHeaders(table).length;
+}
+
 function getDifferentRows(table1, table2) {
-    table1.splice(0, 1);
-    table2.splice(0, 1);
-
-    if (table1.length !== table2.length) {
-        alert(`Unmatch row count! Table1.length: ${table1.length}, Table2.length: ${table2.length}`);
-    }
-
     const rows = [];
+    const table1HeaderCount = getHeaderCount(table1);
+    const table2HeaderCount = getHeaderCount(table2);
 
-    let y = 0;
+    let y = 1;
     while (y < table1.length && y < table2.length) {
-        const diffObj = [];
-        const row1 = table1[y];
-        const row2 = table1[y];
+        //console.log("y =", y)
+        let columnDiffObject = {};
 
-        if (row1.length !== row2.length) {
-            alert(`Unmatch column count at row index ${y}`);
-            break;
+        if (table1HeaderCount !== table2HeaderCount) {
+            //console.log(`Unmatch column count at row index ${y}`);
+            //break;
         }
 
-        let x = 0;
-        while (x < row1.length && x < row2.length) {
-            const column1 = row1[x];
-            const column2 = row2[x];
+        const table1row = table1[y];
+        const table2row = table2[y];
 
-            if (column1 !== column2) {
-                console.log(`difference at row ${y} at column ${x}`);
-                diffObj.push(column1);
-                diffObj.push(column2);
+        let x = 0;
+        while (x < table1row.length && x < table2row.length) {
+            const table1column = table1row[x];
+            const table2column = table2row[x];
+
+            if (table1column !== table2column) {
+                //console.log(`difference at row ${y} at column ${x}`);
+                columnDiffObject[x] = [ table1column, table2column ];
+            } else {
+                //console.log(`#${y} Row Column #${x} equals (${table1column} = ${table2column})`)
             }
 
             x++;
         }
 
-        while (x < row1.length) {
-            const column = row1[x];
-            diffObj.push(column);
+        while (x < table1row.length) {
+            columnDiffObject[x] = [ table1row[x], null ];
+            //console.log(`#1 table has one more column at #${x}`)
+            //console.log("x =", x)
             x++;
         }
 
-        while (x < row2.length) {
-            const column = row2[x];
-            diffObj.push(column);
+        while (x < table2row.length) {
+            columnDiffObject[x] = [ null, table2row[x] ];
+            //console.log(`#2 table has one more column at #${x}`)
+            //console.log("x =", x)
             x++;
         }
-
-        if (diffObj.length !== 0) {
-            rows.push(diffObj);
-        }
-
+        
+        rows.push(columnDiffObject);
+        //console.log(`row #${y}`, columnDiffObject)
         y++;
     }
 
     while (y < table1.length) {
-        const row = table1[y];
-        rows.push(row);
+        let columnDiffObject = {};
+        let x = 0;
+        while (x < table1[y].length) {
+            columnDiffObject[x] = [ table1[y][x] , null ]
+            x++;
+        }
+        rows.push(columnDiffObject);
+        //console.log("#1 table has one more column")
         y++;
     }
 
     while (y < table2.length) {
-        const row = table2[y];
-        rows.push(row);
+        let columnDiffObject = {};
+        let x = 0;
+        while (x < table2[y].length) {
+            columnDiffObject[x] = [ table2[y][x] , null ]
+            x++;
+        }
+        rows.push(columnDiffObject);
+        //console.log("#2 table has one more column")
         y++;
     }
 
+    console.log(rows)
+
     return rows;
+}
+
+function getHeaderTemplate(headers) {
+    let html = "";
+    headers.forEach(header => {
+        html += `<td class="responsive">${header}</td>`;
+    });
+    return html;
 }
 
 $(document).ready(function() {
@@ -155,19 +189,69 @@ $(document).ready(function() {
                 get(`/index.php?action=rows-api&db=youtube_test&table=${btn.dataset.tableName}`),
             ]);
 
-            const tableHeader = [db1Table[0], db2Table[0]];
+            const tableHeaders = [getHeaders(db1Table), getHeaders(db2Table)];
 
             const asd = document.querySelector("div#asdasdasd");
             asd.innerHTML = btn.dataset.tableName + "<br>";
             $('div.modal-background').addClass('visible');
 
             const headers = getHeaders(db1Table, db2Table);
-            asd.innerHTML += JSON.stringify(headers) + "<br>";
-            asd.innerHTML += `Table 1 rows count: ${db1Table.length - 1}<br>`;
-            asd.innerHTML += `Table 2 rows count: ${db2Table.length - 1}<br>`;
-            asd.innerHTML += "Different rows:<br>";
             const differentRows = getDifferentRows(db1Table, db2Table);
-            asd.innerHTML += JSON.stringify(differentRows) + "<br>";
+
+            let html = "<table class='response'><tr>";
+            html += getHeaderTemplate(getHeaders(db1Table));
+            html += getHeaderTemplate(getHeaders(db2Table));
+            html += "</tr>";
+
+            const table1ColumnCount = getHeaderCount(db1Table);
+            const table2ColumnCount = getHeaderCount(db2Table);
+
+            let y = 0;
+            while (x < table1ColumnCount && x < table2ColumnCount) {
+                const table1column = table1row[x];
+                const table2column = table2row[x];
+                
+
+    
+                x++;
+            }
+            
+            differentRows.forEach(row => {
+                html += "<tr>";
+                let table1Columns = "";
+                let table2Columns = "";
+
+                let x = 0;
+                while (x < table1ColumnCount && x < table2ColumnCount) {
+                    const table1column = table1row[x];
+                    const table2column = table2row[x];
+                    
+
+        
+                    x++;
+                }
+        
+                while (x < table1row.length) {
+                    columnDiffObject[x] = [ table1row[x], null ];
+                    //console.log(`#1 table has one more column at #${x}`)
+                    //console.log("x =", x)
+                    x++;
+                }
+        
+                while (x < table2row.length) {
+                    columnDiffObject[x] = [ null, table2row[x] ];
+                    //console.log(`#2 table has one more column at #${x}`)
+                    //console.log("x =", x)
+                    x++;
+                }
+                html += table1Columns;
+                html += table2Columns;
+                html += "</tr>";
+            });
+            
+            html += "</table>";
+
+            asd.innerHTML += html;
         })
     });
 });

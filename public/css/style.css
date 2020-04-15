@@ -21,8 +21,12 @@ td.type-procedures ul, td.type-functions ul {
     margin-left: -20px;
 }
 
-td.diff-table-rows {
+table.response {
+    width: 100%;
+}
 
+td.responsive {
+    width: auto;
 }
 
 .data h3 {
