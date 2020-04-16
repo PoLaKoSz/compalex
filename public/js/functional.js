@@ -191,7 +191,7 @@ $(document).ready(function() {
             }
 
             if (0 < sameRowCounter) {
-                html += `<div class="alert alert-info text-center" role="alert">${sameRowCounter} row without difference</div>`;
+                html += `<div class="alert alert-primary text-center" role="alert">${sameRowCounter} row without difference</div>`;
             }
 
             sameRowCounter = 0;
@@ -202,18 +202,25 @@ $(document).ready(function() {
 
             let x = 0;
             while (x < table1ColumnCount && x < table2ColumnCount) {
-                table1Columns += `<div class="col">${db1Table[y + 1][x]}</div>`;
-                table2Columns += `<div class="col">${db2Table[y + 1][x]}</div>`;
+                const table1ColumnValue = db1Table[y + 1][x];
+                const table2ColumnValue = db2Table[y + 1][x];
+                if (table1ColumnValue !== table2ColumnValue) {
+                    table1Columns += `<div class="col text-danger">${table1ColumnValue}</div>`;
+                    table2Columns += `<div class="col text-success">${table2ColumnValue}</div>`;    
+                } else {
+                    table1Columns += `<div class="col text-muted">${table1ColumnValue}</div>`;
+                    table2Columns += `<div class="col text-muted">${table2ColumnValue}</div>`;    
+                }
                 x++;
             }
     
             while (x < table1ColumnCount) {
-                table1Columns += `<div class="col">row text-uppercase${db1Table[y + 1][x]}</div>`;
+                table1Columns += `<div class="col text-danger">${db1Table[y + 1][x]}</div>`;
                 x++;
             }
     
             while (x < table2ColumnCount) {
-                table2Columns += `<div class="col">${db2Table[y + 1][x]}</div>`;
+                table2Columns += `<div class="col text-success">${db2Table[y + 1][x]}</div>`;
                 x++;
             }
 
@@ -224,7 +231,7 @@ $(document).ready(function() {
         }
 
         if (0 < sameRowCounter) {
-            html += `<div class="alert alert-info text-center" role="alert">${sameRowCounter} row without difference</div>`;
+            html += `<div class="alert alert-primary text-center" role="alert">${sameRowCounter} row without difference</div>`;
         }
         
         html += "</div>";
