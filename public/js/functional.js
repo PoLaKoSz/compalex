@@ -181,9 +181,12 @@ $(document).ready(function() {
         const table1ColumnCount = getHeaderCount(db1Table);
         const table2ColumnCount = getHeaderCount(db2Table);
 
-        let y = 0;
+        db1Table.splice(0, 1);
+        db2Table.splice(0, 1);
+
+        let y = 1;
         let sameRowCounter = 0;
-        while (y < differentRows.length) {
+        while (y < db1Table.length && y < db2Table.length) {
             if (Object.keys(differentRows[y]).length === 0) {
                 sameRowCounter++;
                 y++;
@@ -196,44 +199,44 @@ $(document).ready(function() {
 
             sameRowCounter = 0;
 
-            html += `<div class="row">`;
+            html += `<div class="row text-center">`;
             let table1Columns = "";
             let table2Columns = "";
 
             let x = 0;
             while (x < table1ColumnCount && x < table2ColumnCount) {
-                const table1ColumnValue = db1Table[y + 1][x];
-                const table2ColumnValue = db2Table[y + 1][x];
+                const table1ColumnValue = db1Table[y][x];
+                const table2ColumnValue = db2Table[y][x];
 
                 if (table1ColumnValue !== table2ColumnValue) {
                     if (x + 1 === table1ColumnCount) {
-                        table1Columns += `<div class="col text-danger border-right">${table1ColumnValue}</div>`;
+                        table1Columns += `<div class="col text-danger text-break border-right">${table1ColumnValue}</div>`;
                     } else {
-                        table1Columns += `<div class="col text-danger">${table1ColumnValue}</div>`;
+                        table1Columns += `<div class="col text-danger text-break">${table1ColumnValue}</div>`;
                     }
-                    table2Columns += `<div class="col text-success">${table2ColumnValue}</div>`;
+                    table2Columns += `<div class="col text-success text-break">${table2ColumnValue}</div>`;
                 } else {
                     if (x + 1 === table1ColumnCount) {
-                        table1Columns += `<div class="col text-muted border-right">${table1ColumnValue}</div>`;
+                        table1Columns += `<div class="col text-muted text-break border-right">${table1ColumnValue}</div>`;
                     } else {
-                        table1Columns += `<div class="col text-muted">${table1ColumnValue}</div>`;
+                        table1Columns += `<div class="col text-muted text-break">${table1ColumnValue}</div>`;
                     }
-                    table2Columns += `<div class="col text-muted">${table2ColumnValue}</div>`;
+                    table2Columns += `<div class="col text-muted text-break">${table2ColumnValue}</div>`;
                 }
                 x++;
             }
     
             while (x < table1ColumnCount - 1) {
-                table1Columns += `<div class="col text-danger">${db1Table[y + 1][x]}</div>`;
+                table1Columns += `<div class="col text-danger text-break">${db1Table[y][x]}</div>`;
                 x++;
             }
 
             if (x < table1ColumnCount) {
-                table1Columns += `<div class="col text-danger border-right">${db1Table[y + 1][x]}</div>`;
+                table1Columns += `<div class="col text-danger text-break border-right">${db1Table[y][x]}</div>`;
             }
     
             while (x < table2ColumnCount) {
-                table2Columns += `<div class="col text-success">${db2Table[y + 1][x]}</div>`;
+                table2Columns += `<div class="col text-success text-break">${db2Table[y][x]}</div>`;
                 x++;
             }
 
@@ -245,6 +248,86 @@ $(document).ready(function() {
 
         if (0 < sameRowCounter) {
             html += `<div class="alert alert-primary text-center" role="alert">${sameRowCounter} row without difference</div>`;
+        }
+
+        while (y < db1Table.length) {
+            html += `<div class="row text-center">`;
+            let table1Columns = "";
+            let table2Columns = "";
+
+            let x = 0;
+            while (x < table1ColumnCount) {
+                const table1ColumnValue = db1Table[y][x];
+
+                if (x + 1 === table1ColumnCount) {
+                    table1Columns += `<div class="col text-danger text-break border-right">${table1ColumnValue}</div>`;
+                } else {
+                    table1Columns += `<div class="col text-danger text-break">${table1ColumnValue}</div>`;
+                }
+                x++;
+            }
+    
+            while (x < table1ColumnCount - 1) {
+                table1Columns += `<div class="col text-danger text-break">${db1Table[y][x]}</div>`;
+                x++;
+            }
+
+            if (x < table1ColumnCount) {
+                table1Columns += `<div class="col text-danger text-break border-right">${db1Table[y][x]}</div>`;
+            }
+            
+            x = 0;
+            while (x < table2ColumnCount) {
+                table2Columns += `<div class="col"></div>`;
+                x++;
+            }
+
+            html += table1Columns;
+            html += table2Columns;
+            html += "</div>";
+            y++;
+        }
+
+        while (y < db2Table.length) {
+            html += `<div class="row text-center">`;
+            let table1Columns = "";
+            let table2Columns = "";
+
+            let x = 0;
+            while (x < table1ColumnCount - 1) {
+                table1Columns += `<div class="col"></div>`;
+                x++;
+            }
+
+            if (x < table1ColumnCount) {
+                table1Columns += `<div class="col border-right"></div>`;
+            }
+
+            x = 0;
+            while (x < table2ColumnCount) {
+                const table2ColumnValue = db2Table[y][x];
+
+                if (x + 1 === table2ColumnCount) {
+                    table2Columns += `<div class="col text-danger text-break border-right">${table2ColumnValue}</div>`;
+                } else {
+                    table2Columns += `<div class="col text-danger text-break">${table2ColumnValue}</div>`;
+                }
+                x++;
+            }
+    
+            while (x < table2ColumnCount - 1) {
+                table2Columns += `<div class="col text-danger text-break">${db2Table[y][x]}</div>`;
+                x++;
+            }
+
+            if (x < table2ColumnCount) {
+                table2Columns += `<div class="col text-danger text-break border-right">${db2Table[y][x]}</div>`;
+            }
+
+            html += table1Columns;
+            html += table2Columns;
+            html += "</div>";
+            y++;
         }
         
         html += "</div>";
