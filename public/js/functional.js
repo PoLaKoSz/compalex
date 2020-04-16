@@ -149,8 +149,16 @@ function getDifferentRows(table1, table2) {
 function getHeaderTemplate(headers) {
     let html = "";
     headers.forEach(header => {
-        html += `<th class="col">${header}</th>`;
+        html += `<div class="col">${header}</div>`;
     });
+    return html;
+}
+
+function getEmptyCells(count) {
+    let html = "";
+    for (let i = 0; i < count; i++) {
+        html += `<div class="col"></div>`;
+    }
     return html;
 }
 
@@ -167,10 +175,10 @@ $(document).ready(function() {
         
         const differentRows = getDifferentRows(db1Table, db2Table);
 
-        let html = "<table class='table table-striped table-responsive'><tr>";
+        let html = `<div class="row">`;
         html += getHeaderTemplate(getHeaders(db1Table));
         html += getHeaderTemplate(getHeaders(db2Table));
-        html += "</tr>";
+        html += `</div>`;
 
         const table1ColumnCount = getHeaderCount(db1Table);
         const table2ColumnCount = getHeaderCount(db2Table);
@@ -178,55 +186,59 @@ $(document).ready(function() {
         let y = 1;
         while (y < db1Table.length && y < db2Table.length) {
             if (Object.keys(differentRows[y]).length === 0) {
-                console.log(`#${row} has no difference ... skipping`)
                 y++;
                 continue;
             }
 
-            html += "<tr>";
+            html += `<div class="row">`;
             let table1Columns = "";
             let table2Columns = "";
 
             let x = 0;
             while (x < table1ColumnCount && x < table2ColumnCount) {
-                table1Columns += `<td class="col">${db1Table[y][x]}</td>`;
-                table2Columns += `<td class="col">${db2Table[y][x]}</td>`;
+                table1Columns += `<div class="col">${db1Table[y][x]}</div>`;
+                table2Columns += `<div class="col">${db2Table[y][x]}</div>`;
                 x++;
             }
     
             while (x < table1ColumnCount) {
-                table1Columns += `<td class="col">${db1Table[y][x]}</td>`;
+                table1Columns += `<div class="col">${db1Table[y][x]}</div>`;
                 x++;
             }
     
             while (x < table2ColumnCount) {
-                table2Columns += `<td class="col">${db2Table[y][x]}</td>`;
+                table2Columns += `<div class="col">${db2Table[y][x]}</div>`;
                 x++;
             }
 
             html += table1Columns;
             html += table2Columns;
-            html += "</tr>";
+            html += "</div>";
             y++;
         }
 
         while (y < db1Table.length) {
+            html += `<div class="row">`;
             db1Table[y].forEach(column => {
-                html += `<td class="col">${column}</td>`;
+                html += `<div class="col">${column}</div>`;
             });
-            html += `<td colspan="${table2ColumnCount}"></td>`;
+            html += getEmptyCells(table2ColumnCount);
+            html += `</div>`;
             y++;
         }
 
         while (y < db2Table.length) {
-            html += `<td colspan="${table1ColumnCount}"></td>`;
+            html += `<div class="row">`;
+            html += getEmptyCells(table1ColumnCount);
+            
             db2Table[y].forEach(column => {
-                html += `<td class="col">${column}</td>`;
+                html += `<div class="col">${column}</div>`;
             });
+            html += `</div>`;
             y++;
         }
         
-        html += "</table>";
+        html += "</div>";
 
         modal.find('.modal-title').text(`${tableName} table`);
         modal.find('.modal-body').html(html);
