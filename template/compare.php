@@ -12,8 +12,8 @@
 
 <body>
 <div class="modal-background" onclick="Data.hideTableData(); return false;">
-    <div class="modallll">
-        <div id="asdasdasd"></div>
+    <div class="old-modal">
+        <iframe src="" frameborder="0"></iframe>
     </div>
 </div>
 
