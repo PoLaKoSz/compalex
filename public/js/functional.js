@@ -127,7 +127,6 @@ function getDifferentRows(table1, table2) {
             x++;
         }
         rows.push(columnDiffObject);
-        //console.log("#1 table has one more column")
         y++;
     }
 
@@ -135,7 +134,7 @@ function getDifferentRows(table1, table2) {
         let columnDiffObject = {};
         let x = 0;
         while (x < table2[y].length) {
-            columnDiffObject[x] = [ table2[y][x] , null ]
+            columnDiffObject[x] = [ null, table2[y][x] ]
             x++;
         }
 
@@ -166,7 +165,6 @@ $(document).ready(function() {
     $('#exampleModal').on('show.bs.modal', async function(event) {
         const btn = $(event.relatedTarget);
         const tableName = btn.data('table-name');
-        const modal = $(this);
 
         let [db1Table, db2Table] = await Promise.all([
             get(`/index.php?action=rows-api&db=youtube&table=${tableName}`),
@@ -175,7 +173,7 @@ $(document).ready(function() {
         
         const differentRows = getDifferentRows(db1Table, db2Table);
 
-        let html = `<div class="row">`;
+        let html = `<div class="row text-uppercase border-bottom font-weight-bolder">`;
         html += getHeaderTemplate(getHeaders(db1Table));
         html += getHeaderTemplate(getHeaders(db2Table));
         html += `</div>`;
@@ -183,12 +181,20 @@ $(document).ready(function() {
         const table1ColumnCount = getHeaderCount(db1Table);
         const table2ColumnCount = getHeaderCount(db2Table);
 
-        let y = 1;
-        while (y < db1Table.length && y < db2Table.length) {
+        let y = 0;
+        let sameRowCounter = 0;
+        while (y < differentRows.length) {
             if (Object.keys(differentRows[y]).length === 0) {
+                sameRowCounter++;
                 y++;
                 continue;
             }
+
+            if (0 < sameRowCounter) {
+                html += `<div class="alert alert-info text-center" role="alert">${sameRowCounter} row without difference</div>`;
+            }
+
+            sameRowCounter = 0;
 
             html += `<div class="row">`;
             let table1Columns = "";
@@ -196,18 +202,18 @@ $(document).ready(function() {
 
             let x = 0;
             while (x < table1ColumnCount && x < table2ColumnCount) {
-                table1Columns += `<div class="col">${db1Table[y][x]}</div>`;
-                table2Columns += `<div class="col">${db2Table[y][x]}</div>`;
+                table1Columns += `<div class="col">${db1Table[y + 1][x]}</div>`;
+                table2Columns += `<div class="col">${db2Table[y + 1][x]}</div>`;
                 x++;
             }
     
             while (x < table1ColumnCount) {
-                table1Columns += `<div class="col">${db1Table[y][x]}</div>`;
+                table1Columns += `<div class="col">row text-uppercase${db1Table[y + 1][x]}</div>`;
                 x++;
             }
     
             while (x < table2ColumnCount) {
-                table2Columns += `<div class="col">${db2Table[y][x]}</div>`;
+                table2Columns += `<div class="col">${db2Table[y + 1][x]}</div>`;
                 x++;
             }
 
@@ -217,29 +223,13 @@ $(document).ready(function() {
             y++;
         }
 
-        while (y < db1Table.length) {
-            html += `<div class="row">`;
-            db1Table[y].forEach(column => {
-                html += `<div class="col">${column}</div>`;
-            });
-            html += getEmptyCells(table2ColumnCount);
-            html += `</div>`;
-            y++;
-        }
-
-        while (y < db2Table.length) {
-            html += `<div class="row">`;
-            html += getEmptyCells(table1ColumnCount);
-            
-            db2Table[y].forEach(column => {
-                html += `<div class="col">${column}</div>`;
-            });
-            html += `</div>`;
-            y++;
+        if (0 < sameRowCounter) {
+            html += `<div class="alert alert-info text-center" role="alert">${sameRowCounter} row without difference</div>`;
         }
         
         html += "</div>";
 
+        const modal = $(this);
         modal.find('.modal-title').text(`${tableName} table`);
         modal.find('.modal-body').html(html);
     });
