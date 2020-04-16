@@ -204,19 +204,32 @@ $(document).ready(function() {
             while (x < table1ColumnCount && x < table2ColumnCount) {
                 const table1ColumnValue = db1Table[y + 1][x];
                 const table2ColumnValue = db2Table[y + 1][x];
+
                 if (table1ColumnValue !== table2ColumnValue) {
-                    table1Columns += `<div class="col text-danger">${table1ColumnValue}</div>`;
-                    table2Columns += `<div class="col text-success">${table2ColumnValue}</div>`;    
+                    if (x + 1 === table1ColumnCount) {
+                        table1Columns += `<div class="col text-danger border-right">${table1ColumnValue}</div>`;
+                    } else {
+                        table1Columns += `<div class="col text-danger">${table1ColumnValue}</div>`;
+                    }
+                    table2Columns += `<div class="col text-success">${table2ColumnValue}</div>`;
                 } else {
-                    table1Columns += `<div class="col text-muted">${table1ColumnValue}</div>`;
-                    table2Columns += `<div class="col text-muted">${table2ColumnValue}</div>`;    
+                    if (x + 1 === table1ColumnCount) {
+                        table1Columns += `<div class="col text-muted border-right">${table1ColumnValue}</div>`;
+                    } else {
+                        table1Columns += `<div class="col text-muted">${table1ColumnValue}</div>`;
+                    }
+                    table2Columns += `<div class="col text-muted">${table2ColumnValue}</div>`;
                 }
                 x++;
             }
     
-            while (x < table1ColumnCount) {
+            while (x < table1ColumnCount - 1) {
                 table1Columns += `<div class="col text-danger">${db1Table[y + 1][x]}</div>`;
                 x++;
+            }
+
+            if (x < table1ColumnCount) {
+                table1Columns += `<div class="col text-danger border-right">${db1Table[y + 1][x]}</div>`;
             }
     
             while (x < table2ColumnCount) {
