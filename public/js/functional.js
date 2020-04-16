@@ -163,6 +163,8 @@ function getEmptyCells(count) {
 
 $(document).ready(function() {
     $('#exampleModal').on('show.bs.modal', async function(event) {
+        const modal = $(this);
+        modal.find('.modal-body').html(`<div class="alert alert-info" role="alert">Loading ...</div>`);
         const btn = $(event.relatedTarget);
         const tableName = btn.data('table-name');
 
@@ -332,7 +334,6 @@ $(document).ready(function() {
         
         html += "</div>";
 
-        const modal = $(this);
         modal.find('.modal-title').text(`${tableName} table`);
         modal.find('.modal-body').html(html);
     });
